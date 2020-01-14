@@ -28,14 +28,13 @@ function submitExpense(e) {
 
 function submitDeposit(e) {
   e.preventDefault();
+  addToList(expenseEl.value, priceEl.value);
   total = add(Number(balanceEl.innerText), Number(priceEl.value));
   balanceEl.innerText = total;
-  addToList(expenseEl.value, priceEl.value);
   useIndexedDb("expense", "expenseStore", "put", {
     _id: expenseEl.value,
     name: expenseEl.value,
-    value: priceEl.value,
-    balance: total
+    value: priceEl.value
   });
   expenseEl.value = '';
   priceEl.value = '';
@@ -56,5 +55,7 @@ resetBtn.onclick = reset;
 useIndexedDb("expense", "expenseStore", "get").then(results => {
   results.forEach(expense => {
     addToList(expense.name, expense.value);
+    total = add(Number(balanceEl.innerText), expense.value);
+    balanceEl.innerText = total;
   });
 });
